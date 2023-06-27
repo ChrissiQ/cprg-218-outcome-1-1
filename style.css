@@ -1,0 +1,345 @@
+/**
+ * Define animation keyframes
+ */
+@keyframes menuOpeningNavColours {
+
+  /* Transition through our site colours */
+  from {
+    color: var(--purple-color);
+  }
+
+  50% {
+    color: var(--red-color);
+  }
+
+  to {
+    color: var(--yellow-color);
+  }
+}
+
+@keyframes menuClosingNavColours {
+
+  /* Transition through our site colours in reverse.
+     We do this instead of using the same keyframes as the opening animation
+     and setting the animation-direction to reverse because the animation needs
+     to be reset when it changes direction.  If the same animation is used but
+     the direction is changed on the same frame, the animation will not reset.  See:
+     https://css-tricks.com/restart-css-animation/ for more information.
+
+     The animation must be reset for the technique of setting the
+     animation-delay property to advance the animation when it was previously
+     interrupted to work.
+
+     CSS transitions naturally transition from their current state, but CSS
+     animations are more complex, so we need to simulate this behaviour
+     ourselves with JavaScript by changing the animation-delay (using the
+     --site-nav-animation-delay property). */
+  0% {
+    color: var(--yellow-color);
+  }
+
+  50% {
+    color: var(--red-color);
+  }
+
+  100% {
+    color: var(--purple-color);
+  }
+}
+
+/**
+ * Set page-wide CSS custom properties at the root
+ */
+:root {
+  /* Using properties for these values helps to avoid repeating ourselves,
+     ensures consistency when they are used in multiple places, and can be
+     retrieved in the page JavaScript with the getPropertyValue function. */
+  --margin-size: clamp(15px, 4vw, 60px);
+  --container-max-width: min(60rem, 90vw);
+  --purple-color: rgba(131, 58, 180, 1);
+  --red-color: rgba(253, 29, 29, 1);
+  --yellow-color: rgba(252, 176, 69, 1);
+  --menu-animation-duration: 0.5s;
+  --site-nav-background-color: #eee;
+
+  /* This value is changed in JavaScript when the menu animation is interrupted,
+     so that the animation advances to the correct time when reversing. */
+  --site-nav-animation-delay: 0s;
+
+  /* This value is changed in JavaScript to create a CSS transition effect. */
+  --gradient-background-offset: 0%;
+
+  /* Using a property makes the relationship between z-indices more obvious. */
+  --nav-bar-z-index: 10;
+}
+
+/**
+ * The border-box box-sizing model is more intuitive and easier to predict.
+ */
+html {
+  box-sizing: border-box;
+}
+
+/**
+ * See https://css-tricks.com/box-sizing/#aa-universal-box-sizing-with-inheritance
+ */
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/**
+ * Base styles
+ */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  line-height: 1.35;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: serif;
+}
+
+/**
+ * This makes it easier to use SVGs in the site.
+ * See https://css-tricks.com/cascading-svg-fill-color/
+ */
+svg {
+  fill: currentColor;
+  display: block;
+}
+
+button {
+  color: currentColor;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+/**
+ * Site Navigation
+ */
+.site-nav {
+  position: relative;
+  background-color: var(--site-nav-background-color);
+  color: var(--purple-color);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+}
+
+.site-nav.open {
+  color: var(--yellow-color);
+}
+
+.menu-opening .site-nav {
+  animation: var(--menu-animation-duration) ease-in-out var(--site-nav-animation-delay) 1 normal both running menuOpeningNavColours;
+}
+
+.menu-closing .site-nav {
+  animation: var(--menu-animation-duration) ease-in-out var(--site-nav-animation-delay) 1 normal both running menuClosingNavColours;
+}
+
+.site-nav a {
+  text-decoration: none;
+  color: currentColor;
+  padding: 0;
+}
+
+/**
+ * Navbar controls
+ */
+.nav-bar {
+  width: var(--container-max-width);
+  background-color: var(--site-nav-background-color);
+  padding: calc(var(--margin-size) / 2) var(--margin-size);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: var(--nav-bar-z-index);
+  margin: 0 auto;
+}
+
+/**
+ * Navbar toggle button
+ */
+.menu-toggle {
+  display: block;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 50px;
+  aspect-ratio: 1;
+  padding: 5px;
+}
+
+.menu-toggle svg {
+  width: 100%;
+  height: 100%;
+}
+
+/**
+ * Navbar logo
+ */
+.site-nav-logo {
+  width: 250px;
+}
+
+.site-nav-logo svg {
+  width: 100%;
+  height: auto;
+}
+
+/**
+ * Navbar menu
+ */
+.nav-menu-container {
+  background-color: var(--site-nav-background-color);
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  transform: translateY(-100%);
+  transition: transform var(--menu-animation-duration) ease-in-out;
+  z-index: calc(var(--nav-bar-z-index) - 1);
+}
+
+.nav-menu-container::before {
+  /* This pseudo-element provides the drop shadow. It only needs to be as tall
+     as the shadow, so we set the height and the shadow the same. */
+  --shadow-height: 10px;
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: var(--shadow-height);
+  bottom: 0;
+  left: 0;
+  z-index: calc(var(--nav-bar-z-index) - 4);
+  box-shadow: 0 0 var(--shadow-height) rgba(0, 0, 0, 1);
+}
+
+.nav-menu-container::after {
+  /* This pseudo-element covers the top of the ::before pseudo-element
+     so that the drop shadow is only visible on the bottom. */
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: var(--site-nav-background-color);
+  z-index: calc(var(--nav-bar-z-index) - 3);
+}
+
+.nav-menu-container.active {
+  display: block;
+  transform: translateY(0%);
+  transition: transform var(--menu-animation-duration) ease-in-out;
+}
+
+.menu-opening .nav-menu-container {
+  display: block;
+}
+
+.menu-closing .nav-menu-container {
+  display: block;
+  transform: translateY(-100%);
+}
+
+/**
+ * Menu
+ */
+.nav-menu {
+  /* Flex properties */
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  /* Other properties */
+  list-style: none;
+  margin: 0 auto;
+  width: var(--container-max-width);
+  padding: calc(var(--margin-size) / 2) var(--margin-size);
+  color: rgb(80, 18, 118);
+  position: relative;
+
+  /* Z-index 2 levels lower than the nav bar */
+  z-index: calc(var(--nav-bar-z-index) - 2);
+}
+
+.menu-item {
+  flex: 1 1 100%;
+}
+
+/**
+ * Container
+ * The container centers and constrains the content to a comfortable width.
+ */
+.container {
+  padding: var(--margin-size);
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+}
+
+/**
+ * Hero section
+ */
+.hero {
+  width: 100%;
+  color: white;
+  padding: 15vw 0;
+  background: var(--purple-color);
+  background: repeating-linear-gradient(135deg,
+      var(--purple-color),
+      var(--red-color),
+      var(--yellow-color),
+      var(--purple-color));
+  /* To animate the background when the menu opens, we change the
+     background-size and background-position to create an effect that feels
+     like it's connected to the nav animation. */
+  background-size: calc(150% + var(--gradient-background-offset)*2) calc(150% + var(--gradient-background-offset)*2);
+  background-position: var(--gradient-background-offset) var(--gradient-background-offset);
+  background-repeat: repeat;
+  transition: background-position var(--menu-animation-duration) ease-in-out,
+    background-size var(--menu-animation-duration) ease-in-out;
+}
+
+.hero .container {
+  text-align: center;
+  font-size: 1.5em;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/**
+ * Footer
+ */
+.footer {
+  width: 100%;
+  background: var(--purple-color);
+  background: repeating-linear-gradient(45deg,
+      var(--purple-color),
+      var(--red-color),
+      var(--yellow-color),
+      var(--purple-color));
+  /* Just in case the user can see the footer, we apply the same animation as
+     the hero, since it uses the same gradient but oriented differently.  Most
+     users won't see this as-is, but if the content of the page were shorter,
+     that could change. */
+  background-size: calc(150% + var(--gradient-background-offset)*2) calc(150% + var(--gradient-background-offset)*2);
+  background-position: var(--gradient-background-offset) var(--gradient-background-offset);
+  background-repeat: repeat;
+  transition: background-position var(--menu-animation-duration) ease-in-out,
+    background-size var(--menu-animation-duration) ease-in-out;
+  color: white;
+}

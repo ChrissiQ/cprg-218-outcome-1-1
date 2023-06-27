@@ -1,0 +1,15 @@
+{
+  "name": "cprg-218-outcome-1-1",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "normalize.css": "^8.0.1",
+    "vite": "^4.3.9"
+  }
+}
