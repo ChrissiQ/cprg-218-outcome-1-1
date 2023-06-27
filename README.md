@@ -4,14 +4,24 @@ This repository contains the page used for Outcome 1 Activity 1.
 
 ## Prerequisites for use
 
+## Option 1: Run codespace
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ChrissiQ/cprg-218-outcome-1-1?quickstart=1)
+
+### Instructions
+1. Click the link above to start a codespace for this project and let it load - it may take a minute.
+2. In the terminal, type `npm run dev`
+3. Click the "Open in browser" button from the popup.
+
+## Option 2: Run locally
+
+### Prerequisites
+
 You should have `node` and `npm` installed in order to run.
 
 You should also have `git` installed on your computer in order to clone the repository.
 
-
-## Option 1: Run locally
-
-In order to view the page, follow these steps:
+### Instructions
 
 1. Clone the repository to your computer (`git clone git@github.com:ChrissiQ/cprg-218-outcome-1-1.git`)
    * If you don't have `git` installed or can't install it, you can also download a zip file of the repository by opening the `Code` menu above and clicking the `Download Zip` button.
