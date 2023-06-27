@@ -9,7 +9,7 @@ This repository contains the page used for Outcome 1 Activity 1.
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ChrissiQ/cprg-218-outcome-1-1?quickstart=1)
 
 ### Instructions
-1. Click the link above to start a codespace for this project and let it load - it may take a minute.
+1. Click the link above to start a codespace for this project and click the "Create new codespace" button.  Let it load - it may take a minute.
 2. In the terminal, type `npm run dev`
 3. Click the "Open in browser" button from the popup.
 
